@@ -2,7 +2,6 @@ name: Upload Release Asset
 
 on:
   push:
-    # Sequence of patterns matched against refs/tags
     tags:
     - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
@@ -19,7 +18,7 @@ jobs:
           go-version: 1.13
         id: go
       - name: Install dependencies
-        run: sudo apt install libgpgme-dev libassuan-dev libbtrfs-dev libdevmapper-dev
+        run: sudo apt update && sudo apt install libgpgme-dev libassuan-dev libbtrfs-dev libdevmapper-dev
       - name: Build
         run: make binary-local-static
       - name: Create Release
@@ -38,7 +37,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          upload_url: ${{ steps.create_release.outputs.upload_url }}  
           asset_path: ./skopeo
           asset_name: skopeo
           asset_content_type: application/octet-stream
